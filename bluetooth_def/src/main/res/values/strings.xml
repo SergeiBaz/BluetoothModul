@@ -4,4 +4,6 @@
     <string name="paired_devises">Сопряженные утройства</string>
     <string name="bluet_search">Bluetooch search</string>
     <string name="empty">Пусто</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

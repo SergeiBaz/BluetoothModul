@@ -46,7 +46,8 @@
                 android:background="@null"
                 android:contentDescription="@string/bluetooth_on"
                 app:srcCompat="@drawable/bluetooth_on"
-                tools:ignore="TouchTargetSizeCheck" />
+                tools:ignore="TouchTargetSizeCheck"
+                app:tint="#928C8C" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -87,7 +88,8 @@
                 android:background="@null"
                 android:contentDescription="@string/bluet_search"
                 app:srcCompat="@drawable/bluetooth_search"
-                tools:ignore="TouchTargetSizeCheck" />
+                tools:ignore="TouchTargetSizeCheck,UseAppTint"
+                android:tint="@color/teal_700"/>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
