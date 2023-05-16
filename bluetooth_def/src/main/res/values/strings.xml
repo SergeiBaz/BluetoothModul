@@ -1,3 +1,7 @@
 <resources>
-
+    <string name="bluetooth_on">bluetooth on</string>
+    <string name="search_devises">Поиск устройств</string>
+    <string name="paired_devises">Сопряженные утройства</string>
+    <string name="bluet_search">Bluetooch search</string>
+    <string name="empty">Пусто</string>
 </resources>
