@@ -1,5 +1,6 @@
 package com.example.bluetooth_def
 
+import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -8,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,7 +20,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bluetooth_def.databinding.FragmentListBinding
 import com.google.android.material.snackbar.Snackbar
-import java.util.prefs.Preferences
 
 class DeviceListFragment : Fragment(), ItemAdapter.Listener {
     private var preferences: SharedPreferences? = null
@@ -26,6 +27,7 @@ class DeviceListFragment : Fragment(), ItemAdapter.Listener {
     private lateinit var binding: FragmentListBinding
     private var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var bluetoothLauncher: ActivityResultLauncher<Intent>
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,10 +38,12 @@ class DeviceListFragment : Fragment(), ItemAdapter.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        preferences = activity?.getSharedPreferences(BluetoothConstants.PREFERENCES, Context.MODE_PRIVATE)
+        preferences =
+            activity?.getSharedPreferences(BluetoothConstants.PREFERENCES, Context.MODE_PRIVATE)
         binding.imBluetoothOn.setOnClickListener {
             bluetoothLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
         }
+        checkPermission()
         initRcViewPaired()
         registerBluetoothLaunch()
         initBluetoothAdapter()
@@ -98,7 +102,39 @@ class DeviceListFragment : Fragment(), ItemAdapter.Listener {
         }
     }
 
-    private fun saveDevises(mac: String){
+    private fun checkPermission() {
+        if (!checkBluetoothPermissions()) {
+            registerPermissionListener()
+            launchBluetoothPermission()
+        }
+    }
+
+    private fun launchBluetoothPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                )
+            )
+        } else {
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                )
+            )
+        }
+    }
+
+    private fun registerPermissionListener() {
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+
+        }
+    }
+
+    private fun saveDevises(mac: String) {
         val editor = preferences?.edit()
         editor?.putString(BluetoothConstants.MAC, mac)
         editor?.apply()
